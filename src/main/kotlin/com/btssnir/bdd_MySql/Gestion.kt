@@ -297,4 +297,11 @@ class Gestion() {
         preparedStatement.setDouble(4,price)
         return preparedStatement.executeUpdate()
     }
+
+    fun suprimerStand(idStand: Int): Int {
+        val preparedStatement = laConnexion.getConnexion().prepareStatement(
+            "DELETE FROM `stand` WHERE id_Stand = ?")
+        preparedStatement.setInt(1,idStand)
+        return preparedStatement.executeUpdate()
+    }
 }

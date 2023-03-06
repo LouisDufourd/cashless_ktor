@@ -208,9 +208,20 @@ fun Application.configureRouting() {
                 val price = call.parameters["price"]?.toDoubleOrNull()
                 if(idStand != null && idArticle != null && amount != null && price != null) {
                     when(gestion.ajouterStock(idStand,idArticle,amount,price)) {
-                        0 -> call.respond(HttpStatusCode.NotFound, "article non associer à ce stand")
+                        0 -> call.respond(HttpStatusCode.Found, "article déjà associer à ce stand")
                         1 -> call.respond(HttpStatusCode.OK)
                     }
+                }
+            }
+            delete("stand_remove") {
+                val idStand = call.parameters["idStand"]?.toIntOrNull()
+                if(idStand != null) {
+                    when (gestion.suprimerStand(idStand)) {
+                        0-> call.respond(HttpStatusCode.NotFound, "Ce stand n'existe pas")
+                        1-> call.respond(HttpStatusCode.OK)
+                    }
+                } else {
+                    call.respond(HttpStatusCode.BadRequest)
                 }
             }
         }
