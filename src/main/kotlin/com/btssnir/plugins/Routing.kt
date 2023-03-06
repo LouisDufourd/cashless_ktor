@@ -189,6 +189,30 @@ fun Application.configureRouting() {
                     }
                 }
             }
+            post("stock_edit") {
+                val idStand = call.parameters["idStand"]?.toIntOrNull()
+                val idArticle = call.parameters["idArticle"]?.toIntOrNull()
+                val amount = call.parameters["amount"]?.toIntOrNull()
+                val price = call.parameters["price"]?.toDoubleOrNull()
+                if(idStand != null && idArticle != null && amount != null && price != null) {
+                    when(gestion.modifierStock(idStand,idArticle,amount,price)) {
+                        0 -> call.respond(HttpStatusCode.NotFound, "article non associer à ce stand")
+                        1 -> call.respond(HttpStatusCode.OK)
+                    }
+                }
+            }
+            post("stock_add") {
+                val idStand = call.parameters["idStand"]?.toIntOrNull()
+                val idArticle = call.parameters["idArticle"]?.toIntOrNull()
+                val amount = call.parameters["amount"]?.toIntOrNull()
+                val price = call.parameters["price"]?.toDoubleOrNull()
+                if(idStand != null && idArticle != null && amount != null && price != null) {
+                    when(gestion.ajouterStock(idStand,idArticle,amount,price)) {
+                        0 -> call.respond(HttpStatusCode.NotFound, "article non associer à ce stand")
+                        1 -> call.respond(HttpStatusCode.OK)
+                    }
+                }
+            }
         }
     }
 }
