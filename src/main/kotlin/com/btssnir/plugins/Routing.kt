@@ -224,6 +224,14 @@ fun Application.configureRouting() {
                     call.respond(HttpStatusCode.BadRequest)
                 }
             }
+            get("stand_historic") {
+                val idStand = call.parameters["idStand"]?.toIntOrNull()
+                if(idStand != null) {
+                    call.respond(HttpStatusCode.OK,gestion.historiqueStand(idStand))
+                } else {
+                    call.respond(HttpStatusCode.OK)
+                }
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.btssnir.bdd_MySql
 
 import com.btssnir.models.Carte
+import com.btssnir.models.Historique
+import com.btssnir.models.Stand
 import com.btssnir.models.Utilisateur
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -302,6 +304,26 @@ class Gestion() {
         val preparedStatement = laConnexion.getConnexion().prepareStatement(
             "DELETE FROM `stand` WHERE id_Stand = ?")
         preparedStatement.setInt(1,idStand)
+        return preparedStatement.executeUpdate()
+    }
+
+    fun historiqueStand(idStand: Int): ArrayList<Historique> {
+        val historics : ArrayList<Historique> = ArrayList<Historique>()
+        val preparedStatement = laConnexion.getConnexion().prepareStatement(
+            "SELECT * FROM `historique_des_transactions` JOIN carte ON historique_des_transactions.Carte_id_Carte = carte.id_Carte JOIN stand ON historique_des_transactions.Stand_id_Stand = stand.id_Stand WHERE Stand_id_Stand = ?;")
+        preparedStatement.setInt(1,idStand)
+        val rs = preparedStatement.executeQuery()
+        while (rs.next()) {
+            historics.add(Historique(rs.getInt("id_historique"),rs.getString("horodatage"),Carte(rs.getInt("id_Carte"),rs.getInt("pin"),rs.getDouble("carte.argent"),rs.getString("code NFC")),Stand(idStand,rs.getString("nom_stand")),rs.getDouble("historique_des_transactions.argent")))
+        }
+        return historics
+    }
+
+    fun modifierStand(idStand: Int, nomStand:String): Int {
+        val preparedStatement = laConnexion.getConnexion().prepareStatement(
+            "UPDATE `stand` SET `nom_stand`= ? WHERE id_Stand = ?")
+        preparedStatement.setString(1,nomStand)
+        preparedStatement.setInt(2,idStand)
         return preparedStatement.executeUpdate()
     }
 }
