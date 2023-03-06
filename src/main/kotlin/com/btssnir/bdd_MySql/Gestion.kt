@@ -281,7 +281,15 @@ class Gestion() {
     }
 
     fun ajouterStock(idStand: Int, idArticle: Int, amount: Int, price: Double): Int {
-        val preparedStatement = laConnexion.getConnexion().prepareStatement(
+        var preparedStatement = laConnexion.getConnexion().prepareStatement(
+            "SELECT NULL FROM stand_has_article WHERE Stand_id_Stand = ? AND article_id_Article = ?")
+        preparedStatement.setInt(1,idStand)
+        preparedStatement.setInt(2,idArticle)
+        var rs = preparedStatement.executeQuery()
+        while (rs.next()) {
+            return 0
+        }
+        preparedStatement = laConnexion.getConnexion().prepareStatement(
             "INSERT INTO `stand_has_article`(`Stand_id_Stand`, `article_id_Article`, `quantite`, `prix`) VALUES (?,?,?,?)")
         preparedStatement.setInt(1,idStand)
         preparedStatement.setInt(2,idArticle)
