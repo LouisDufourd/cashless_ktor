@@ -62,10 +62,10 @@ class Gestion() {
         }
     }
 
-    fun connecteCarteUtilisateur(pin:String,idUtilisateur: String) : Int{
+    fun connecteCarteUtilisateur(pin:Int,idUtilisateur: Int) : Int{
         var preparedStatement = laConnexion.getConnexion().prepareStatement(
             "SELECT id_Carte FROM carte WHERE pin = ?")
-        preparedStatement.setString(1,pin)
+        preparedStatement.setInt(1,pin)
         var rs = preparedStatement.executeQuery()
         var idCarte = -1;
         while (rs.next()) {
@@ -84,7 +84,7 @@ class Gestion() {
         preparedStatement = laConnexion.getConnexion().prepareStatement(
             "UPDATE `utilisateur` SET `Carte_id_Carte`=? WHERE id_Utilisateur = ?")
         preparedStatement.setInt(1,idCarte)
-        preparedStatement.setString(2,idUtilisateur)
+        preparedStatement.setInt(2,idUtilisateur)
         return preparedStatement.executeUpdate()
     }
 
@@ -98,39 +98,39 @@ class Gestion() {
         return utilisateur
     }
 
-    fun modifierUtilisateur(id: String, idCarte: String?, user: String, password: String) : Boolean {
+    fun modifierUtilisateur(id: Int, idCarte: Int?, user: String, password: String) : Boolean {
         var preparedStatement:PreparedStatement
         if(idCarte == null) {
             preparedStatement = laConnexion.getConnexion().prepareStatement(
                 "UPDATE `utilisateur` SET `user`= ? ,`password`= ? WHERE id_Utilisateur = ?")
             preparedStatement.setString(1,user)
             preparedStatement.setString(2,password)
-            preparedStatement.setString(3,id)
+            preparedStatement.setInt(3,id)
             preparedStatement.executeUpdate()
             return true
         } else {
             preparedStatement = laConnexion.getConnexion().prepareStatement(
                 "SELECT NULL FROM carte WHERE id_Carte = ?")
-            preparedStatement.setString(1,idCarte)
+            preparedStatement.setInt(1,idCarte)
             val rs = preparedStatement.executeQuery()
             while (!rs.next()) {
                 return false
             }
             preparedStatement = laConnexion.getConnexion().prepareStatement(
                 "UPDATE `utilisateur` SET `Carte_id_Carte`= ? ,`user`= ? ,`password`= ? WHERE id_Utilisateur= ?")
-            preparedStatement.setString(1,idCarte)
+            preparedStatement.setInt(1,idCarte)
             preparedStatement.setString(2,user)
             preparedStatement.setString(3,password)
-            preparedStatement.setString(4,id)
+            preparedStatement.setInt(4,id)
             preparedStatement.executeUpdate()
             return true
         }
     }
 
-    fun creeCarte(pin:String, codeNFC:String):Int {
+    fun creeCarte(pin: Int, codeNFC:String):Int {
         var preparedStatement = laConnexion.getConnexion().prepareStatement(
             "SELECT NULL FROM `carte` WHERE carte.pin = ?")
-        preparedStatement.setString(1,pin)
+        preparedStatement.setInt(1,pin)
         var rs = preparedStatement.executeQuery()
         while (rs.next()){
             return 1
@@ -144,25 +144,25 @@ class Gestion() {
         }
         preparedStatement = laConnexion.getConnexion().prepareStatement(
             "INSERT INTO `carte`(`id_Carte`, `pin`, `argent`, `codeNFC`) VALUES (NULL,?,0,?)")
-        preparedStatement.setString(1,pin)
+        preparedStatement.setInt(1,pin)
         preparedStatement.setString(2,codeNFC)
         preparedStatement.executeUpdate()
         return 0
     }
 
-    fun modifierCarte(solde:Double, idCarte:String, codeNFC: String, pin: String) : Int {
+    fun modifierCarte(solde:Double, idCarte:Int, codeNFC: String, pin: Int) : Int {
         var preparedStatement = laConnexion.getConnexion().prepareStatement(
             "SELECT null FROM `carte` WHERE codeNFC = ? AND id_Carte!=?;")
         preparedStatement.setString(1,codeNFC)
-        preparedStatement.setString(2,idCarte)
+        preparedStatement.setInt(2,idCarte)
         var rs = preparedStatement.executeQuery()
         while (rs.next()) {
             return 1
         }
         preparedStatement = laConnexion.getConnexion().prepareStatement(
             "SELECT * FROM `carte` WHERE pin=? AND id_Carte!=?;")
-        preparedStatement.setString(1,pin)
-        preparedStatement.setString(2,idCarte)
+        preparedStatement.setInt(1,pin)
+        preparedStatement.setInt(2,idCarte)
         rs = preparedStatement.executeQuery()
         while (rs.next()) {
             return 2
@@ -171,8 +171,8 @@ class Gestion() {
             "UPDATE `carte` SET `argent`=?, codeNFC=?, pin=? WHERE id_Carte=?")
         preparedStatement.setDouble(1,solde)
         preparedStatement.setString(2,codeNFC)
-        preparedStatement.setString(3,pin)
-        preparedStatement.setString(4,idCarte)
+        preparedStatement.setInt(3,pin)
+        preparedStatement.setInt(4,idCarte)
         preparedStatement.executeUpdate()
         return 0
     }
@@ -214,10 +214,10 @@ class Gestion() {
         return solde
     }
 
-    fun supprimerCarte(id: String) {
+    fun supprimerCarte(id: Int) {
         val preparedStatement = laConnexion.getConnexion().prepareStatement(
             "DELETE FROM `carte` WHERE id_Carte = ?")
-        preparedStatement.setString(1,id)
+        preparedStatement.setInt(1,id)
         preparedStatement.executeUpdate()
     }
 

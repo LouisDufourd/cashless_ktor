@@ -55,8 +55,8 @@ fun Application.configureRouting() {
                 }
             }
             post("client_edit") {
-                val id = call.parameters["idClient"]
-                val idCarte = call.parameters["idCarte"]
+                val id = call.parameters["idClient"]?.toIntOrNull()
+                val idCarte = call.parameters["idCarte"]?.toIntOrNull()
                 val user = call.parameters["user"]
                 val password = call.parameters["password"]
                 if(id != null && user != null && password != null) {
@@ -70,8 +70,8 @@ fun Application.configureRouting() {
                 }
             }
             post("card_connect") {
-                val pin = call.parameters["pin"]
-                val id = call.parameters["idUtilisateur"]
+                val pin = call.parameters["pin"]?.toIntOrNull()
+                val id = call.parameters["idUtilisateur"]?.toIntOrNull()
                 if(pin != null && id != null) {
                     when(gestion.connecteCarteUtilisateur(pin,id)) {
                         0 -> call.respond(HttpStatusCode.NotFound,"user not found")
@@ -85,7 +85,7 @@ fun Application.configureRouting() {
             }
             post("create_card") {
                 val codeNFC = call.parameters["codeNFC"]
-                val pin = call.parameters["pin"]
+                val pin = call.parameters["pin"]?.toIntOrNull()
                 if(pin != null && codeNFC != null) {
                     when (gestion.creeCarte(pin,codeNFC)){
                         0 -> call.respond(HttpStatusCode.OK)
@@ -98,9 +98,9 @@ fun Application.configureRouting() {
             }
             post("modify_card") {
                 val solde = call.parameters["solde"]?.toDoubleOrNull()
-                val idCarte = call.parameters["id"]
+                val idCarte = call.parameters["id"]?.toIntOrNull()
                 val codeNFC = call.parameters["codeNFC"]
-                val pin = call.parameters["pin"]
+                val pin = call.parameters["pin"]?.toIntOrNull()
                 if(idCarte != null && solde != null && codeNFC != null && pin != null) {
                     when(gestion.modifierCarte(solde, idCarte,codeNFC,pin)) {
                         0 -> call.respond(HttpStatusCode.OK)
@@ -144,7 +144,7 @@ fun Application.configureRouting() {
                 }
             }
             delete("delete_card") {
-                val id = call.parameters["idCarte"]
+                val id = call.parameters["idCarte"]?.toIntOrNull()
                 if(id != null) {
                     gestion.supprimerCarte(id)
                     call.respond(HttpStatusCode.OK)
@@ -229,7 +229,19 @@ fun Application.configureRouting() {
                 if(idStand != null) {
                     call.respond(HttpStatusCode.OK,gestion.historiqueStand(idStand))
                 } else {
-                    call.respond(HttpStatusCode.OK)
+                    call.respond(HttpStatusCode.BadRequest)
+                }
+            }
+            post("stand_edit") {
+                val idStand = call.parameters["idStand"]?.toIntOrNull()
+                val nomStand = call.parameters["nomStand"]
+                if(idStand != null && nomStand != null) {
+                    when(gestion.modifierStand(idStand,nomStand)) {
+                        0 -> call.respond(HttpStatusCode.NotFound, "le stand n'existe pas")
+                        1 -> call.respond(HttpStatusCode.OK)
+                    }
+                } else {
+                    call.respond(HttpStatusCode.BadRequest)
                 }
             }
         }
