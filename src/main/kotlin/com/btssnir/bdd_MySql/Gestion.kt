@@ -283,10 +283,10 @@ class Gestion() {
     fun ajouterStock(idStand: Int, idArticle: Int, amount: Int, price: Double): Int {
         val preparedStatement = laConnexion.getConnexion().prepareStatement(
             "INSERT INTO `stand_has_article`(`Stand_id_Stand`, `article_id_Article`, `quantite`, `prix`) VALUES (?,?,?,?)")
-        preparedStatement.setInt(1,amount)
-        preparedStatement.setDouble(2,price)
-        preparedStatement.setInt(3,idStand)
-        preparedStatement.setInt(4,idArticle)
+        preparedStatement.setInt(1,idStand)
+        preparedStatement.setInt(2,idArticle)
+        preparedStatement.setInt(3,amount)
+        preparedStatement.setDouble(4,price)
         return preparedStatement.executeUpdate()
     }
 }
