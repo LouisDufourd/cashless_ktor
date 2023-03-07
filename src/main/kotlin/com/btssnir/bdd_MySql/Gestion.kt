@@ -38,7 +38,7 @@ class Gestion() {
 
     fun inscriptionUtilisateur(user: String, password: String) : Boolean{
         var prepStatement = laConnexion.getConnexion().prepareStatement(
-            "SELECT 'user' 'password' FROM `utilisateur` WHERE user = ?;")
+            "SELECT NULL FROM `utilisateur` WHERE user = ?;")
         prepStatement.setString(1,user)
         val rs = prepStatement.executeQuery()
         while (rs.next()) {
@@ -48,6 +48,7 @@ class Gestion() {
             "INSERT INTO `utilisateur` (`id_Utilisateur`, `Carte_id_Carte`, `user`, `password`) VALUES (NULL, NULL, ?, ?);")
         prepStatement.setString(1,user)
         prepStatement.setString(2,password)
+        prepStatement.executeUpdate()
         return true
     }
 
@@ -185,17 +186,23 @@ class Gestion() {
         preparedStatement.executeUpdate()
     }
 
-    fun debiterCarte(codeNFC:String, amount:Double) : Boolean {
+    fun debiterCarte(codeNFC:String, amount:Double) : Int {
+        if(amount < 0) {
+            return 2
+        }
         var solde = getSolde(codeNFC)
         solde -= amount
         if(solde < 0) {
-            return false
+            return 1
         }
         setSolde(solde,codeNFC)
-        return true
+        return 0
     }
 
     fun crediterCarte(codeNFC: String, amount: Double): Boolean {
+        if(amount < 0) {
+            return false;
+        }
         var solde = getSolde(codeNFC)
         solde += amount
         setSolde(solde,codeNFC)
@@ -214,11 +221,11 @@ class Gestion() {
         return solde
     }
 
-    fun supprimerCarte(id: Int) {
+    fun supprimerCarte(id: Int) :Int{
         val preparedStatement = laConnexion.getConnexion().prepareStatement(
             "DELETE FROM `carte` WHERE id_Carte = ?")
         preparedStatement.setInt(1,id)
-        preparedStatement.executeUpdate()
+        return preparedStatement.executeUpdate()
     }
 
     fun ajouterArticleStand(idStand: Int, idArticle: Int, amount:Int) : Int {

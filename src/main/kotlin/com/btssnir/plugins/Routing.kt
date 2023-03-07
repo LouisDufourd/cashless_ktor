@@ -36,7 +36,7 @@ fun Application.configureRouting() {
                     if(gestion.inscriptionUtilisateur(user,password)) {
                         call.respond(HttpStatusCode.OK)
                     } else {
-                        call.respond(HttpStatusCode.Found)
+                        call.respond(HttpStatusCode.Found,"user allready register")
                     }
                 } else {
                     call.respond(HttpStatusCode.BadRequest)
@@ -116,10 +116,10 @@ fun Application.configureRouting() {
                 val codeNFC = call.parameters["codeNFC"]
                 val amount = call.parameters["amount"]?.toDoubleOrNull()
                 if(codeNFC != null && amount != null && amount >= 0) {
-                    if(gestion.debiterCarte(codeNFC,amount)) {
-                        call.respond(HttpStatusCode.OK)
-                    } else {
-                        call.respond(HttpStatusCode(452,"not enought money on balance"))
+                    when(gestion.debiterCarte(codeNFC,amount)) {
+                        0 -> call.respond(HttpStatusCode.OK)
+                        1 -> call.respond(HttpStatusCode(452, "not enough money on balance"), "Le solde de la carte n'est pas suffisant")
+                        2 -> call.respond(HttpStatusCode.BadRequest,"La quantité ne peut être négatif")
                     }
                 } else {
                     call.respond(HttpStatusCode.BadRequest)
@@ -129,8 +129,11 @@ fun Application.configureRouting() {
                 val codeNFC = call.parameters["codeNFC"]
                 val amount = call.parameters["amount"]?.toDoubleOrNull()
                 if(codeNFC != null && amount != null && amount >= 0) {
-                    gestion.crediterCarte(codeNFC, amount)
-                    call.respond(HttpStatusCode.OK)
+                    if(gestion.crediterCarte(codeNFC, amount)) {
+                        call.respond(HttpStatusCode.OK)
+                    } else {
+                        call.respond(HttpStatusCode.BadRequest, "La quantité ne peut pas être négatif")
+                    }
                 } else {
                     call.respond(HttpStatusCode.BadRequest)
                 }
@@ -146,8 +149,10 @@ fun Application.configureRouting() {
             delete("delete_card") {
                 val id = call.parameters["idCarte"]?.toIntOrNull()
                 if(id != null) {
-                    gestion.supprimerCarte(id)
-                    call.respond(HttpStatusCode.OK)
+                    when(gestion.supprimerCarte(id)) {
+                        0->call.respond(HttpStatusCode.NotFound, "la carte n'existe pas")
+                        1->call.respond(HttpStatusCode.OK)
+                    }
                 } else {
                     call.respond(HttpStatusCode.BadRequest)
                 }
