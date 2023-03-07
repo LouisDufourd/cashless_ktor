@@ -36,7 +36,7 @@ fun Application.configureRouting() {
                     if(gestion.inscriptionUtilisateur(user,password)) {
                         call.respond(HttpStatusCode.OK)
                     } else {
-                        call.respond(HttpStatusCode.Found,"user allready register")
+                        call.respond(HttpStatusCode.Found,"user already register")
                     }
                 } else {
                     call.respond(HttpStatusCode.BadRequest)
