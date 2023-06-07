@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+.buttoon{
+    padding: 10px 10px;
+    background-color: #000000;
+    color: #64a19d;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    letter-spacing: 4px;
+    overflow: hidden;
+    transition: 0.1s;
+    cursor: pointer;
+}
+
+button:hover{
+    background: #64a19d;
+    color: #050801;
+    box-shadow: 0 0 0px #64a19d,
+    0 0 5px #64a19d,
+    0 0 15px #64a19d,
+    0 0 30px #64a19d;
+}
+.open-btn {
+    display: flex;
+    justify-content: flex-start;
+}
+.open-button {
+    background-color: #64a19d;
+    color: white;
+}
+/* Positionnez la forme Popup */
+.login-popup {
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+/* Masquez la forme Popup */
+.form-popup {
+    display: none;
+    position: fixed;
+    left: 45%;
+    top: 5%;
+    transform: translate(-45%, 5%);
+    border: 2px solid #666;
+    z-index: 9;
+}
+/* Styles pour le conteneur de la forme */
+.form-container {
+    max-width: 300px;
+    padding: 20px;
+    background-color: #fff;
+}
+/* Largeur complète pour les champs de saisie */
+.form-container input[type="text"],
+.form-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 22px 0;
+    border: none;
+    background: #eee;
+}
+/* Quand les entrées sont concentrées, faites quelque chose */
+.form-container input[type="text"]:focus,
+.form-container input[type="password"]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+/* Stylez le bouton de connexion */
+.form-container .btn {
+    background-color: #64a19d;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+/* Stylez le bouton pour annuler */
+.form-container .cancel {
+    background-color: #64a19d;
+}
+/* Planez les effets pour les boutons */
+.form-container .btn:hover,
+.open-button:hover {
+    opacity: 1;
+}
